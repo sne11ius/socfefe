@@ -27,6 +27,23 @@ class FefeBlogPostServiceImpl extends FefeBlogPostService {
     postsFromUrl(baseUrl)
   }
   
+  def getSinglePost(ts: String): Future[FefeBlogPost] = {
+    WS.url(baseUrl + "?ts=" + ts).get().map {
+      response => {
+        val doc = Jsoup.parse(response.body)
+        doc.select("body > h3 + ul > li").map {
+          singlePost => {
+            val permaLink = singlePost.select("a:first-of-type").attr("href")
+            val timestamp = makeTimeStamp(permaLink.drop(4))
+            singlePost.select("> a:first-child").remove()
+            val postBody = singlePost.html()
+            FefeBlogPost(permaLink, postBody, timestamp)
+          }
+        }
+      }.toList.get(0)
+    }
+  }
+  
   def find(end: LocalDateTime): Future[List[FefeBlogPost]] = {
     find(LocalDateTime.now(), end)
   }
