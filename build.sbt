@@ -12,3 +12,9 @@ libraryDependencies ++= Seq(
   cache,
   ws
 )
+
+includeFilter in (Assets, LessKeys.less) := "*.less"
+
+excludeFilter in (Assets, LessKeys.less) := "_*.less"
+ 
+LessKeys.compress in Assets := true

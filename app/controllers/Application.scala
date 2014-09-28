@@ -15,14 +15,9 @@ class Application @Inject() (val fefeBlogPostService: FefeBlogPostService) exten
   def index = Action.async {
     fefeBlogPostService.getDefaultPosts map {
       posts => {
-        Logger.debug("#posts: " + posts.length)
-        posts.foreach {
-          post => {
-            Logger.debug(post.toString())
-          }
-        }
+        Ok(views.html.index(posts))
       }
     }
-    Future.successful(Ok(views.html.index("Your new application is ready.")))
   }
+
 }

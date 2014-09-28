@@ -45,7 +45,7 @@ class FefeBlogPostServiceImpl extends FefeBlogPostService {
           singlePost => {
             val permaLink = singlePost.select("a:first-of-type").attr("href")
             val timestamp = makeTimeStamp(permaLink.drop(4))
-            singlePost.select("a:first-of-type").remove()
+            singlePost.select("> a:first-child").remove()
             val postBody = singlePost.html()
             FefeBlogPost(permaLink, postBody, timestamp)
           }

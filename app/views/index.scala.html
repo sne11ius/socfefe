@@ -1,7 +1,15 @@
-@(message: String)
+@(posts: List[FefeBlogPost])
 
-@main("Welcome to Play") {
-
-    @play20.welcome(message)
-
+@main() {
+  @for(post <- posts) {
+    <div class="post">
+      <div class="timestamp">
+        @post.date
+      </div>
+      @Html(post.body)
+      <div class="permalink">
+        <a href="@post.permaLink">Link</a>
+      </div>
+    </div>
+  }
 }
