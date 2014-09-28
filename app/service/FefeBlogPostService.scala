@@ -7,6 +7,8 @@ import scala.concurrent.Future
 
 trait FefeBlogPostService {
 
+  def getDefaultPosts: Future[List[FefeBlogPost]]
+  
   def find(end: LocalDateTime): Future[List[FefeBlogPost]]
   
   def find(begin: LocalDateTime, end: LocalDateTime): Future[List[FefeBlogPost]]

@@ -7,26 +7,22 @@ import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.Play.current
 import scala.concurrent.Future
+import service.FefeBlogPostService
+import javax.inject.Inject
 
-object Application extends Controller {
+class Application @Inject() (val fefeBlogPostService: FefeBlogPostService) extends Controller {
 
   def index = Action.async {
-    try {
-      val fefeBlogPosts = new FefeBlogPostServiceImpl().find(LocalDateTime.now().plusMonths(2))
-      fefeBlogPosts.map {
-        posts => {
-          Logger.debug("#posts: " + posts.length)
-          posts.take(1).foreach {
-            post => {
-              Logger.debug(post.toString())
-            }
+    fefeBlogPostService.getDefaultPosts map {
+      posts => {
+        Logger.debug("#posts: " + posts.length)
+        posts.foreach {
+          post => {
+            Logger.debug(post.toString())
           }
         }
       }
-    } catch {
-      case t: Throwable => t.printStackTrace()
     }
     Future.successful(Ok(views.html.index("Your new application is ready.")))
   }
-
 }

@@ -22,6 +22,11 @@ class FefeBlogPostServiceImpl extends FefeBlogPostService {
   val yearMonthFormat = DateTimeFormatter.ofPattern("yyyyMM")
   val fefec0de = java.lang.Long.parseLong("fefec0de", 16)
   
+  
+  def getDefaultPosts: Future[List[models.FefeBlogPost]] = {
+    postsFromUrl(baseUrl)
+  }
+  
   def find(end: LocalDateTime): Future[List[FefeBlogPost]] = {
     find(LocalDateTime.now(), end)
   }
@@ -29,8 +34,11 @@ class FefeBlogPostServiceImpl extends FefeBlogPostService {
   def find(begin: LocalDateTime, end: LocalDateTime): Future[List[FefeBlogPost]] = {
     val currentTime = begin
     val currentUrl = baseUrl + "?mon=" + currentTime.format(yearMonthFormat)
-    Logger.debug(currentUrl)
-    WS.url(currentUrl).get().map {
+    postsFromUrl(currentUrl)
+  }
+  
+  def postsFromUrl(url: String) = {
+    WS.url(url).get().map {
       response => {
         val doc = Jsoup.parse(response.body)
         doc.select("body > h3 + ul > li").map {
@@ -45,11 +53,10 @@ class FefeBlogPostServiceImpl extends FefeBlogPostService {
       }.toList
     }
   }
-  
+    
   def makeTimeStamp(encoded: String) = {
     val encodedTimestamp = java.lang.Long.parseLong(encoded, 16)
     val z = (encodedTimestamp ^ fefec0de) * 1000
     LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(z), ZoneOffset.UTC)
   }
-  
 }
