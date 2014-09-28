@@ -28,5 +28,5 @@ class Application @Inject() (val fefeBlogPostService: FefeBlogPostService) exten
       }
     }
   }
-  
+
 }

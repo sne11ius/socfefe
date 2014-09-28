@@ -9,6 +9,9 @@ scalaVersion := "2.11.1"
 libraryDependencies ++= Seq(
   "net.codingwell" %% "scala-guice" % "4.0.0-beta4",
   "org.jsoup" % "jsoup" % "1.7.3",
+  "org.webjars" %% "webjars-play" % "2.3.0",
+  "org.webjars" % "bootstrap" % "3.1.1",
+  "org.webjars" % "jquery" % "1.11.0",
   cache,
   ws
 )

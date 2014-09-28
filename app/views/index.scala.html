@@ -3,13 +3,27 @@
 @main() {
   @for(post <- posts) {
     <div class="post">
-      <div class="timestamp">
+      <!--div class="timestamp">
         @post.date
+      </div-->
+      <div class="row">
+	      <div class="col-lg-3">
+          <a class="permalink" href="@post.permaLink">[l]</a>
+	        <div
+	          class="header-image"
+	          style="background-image: url('@routes.ImageSearchController.findImage(post.longestWord)');"
+	        >
+	        </div>
+	      </div>
+	      <div class="col-lg-5">
+	        <div class="post-body">
+	          @Html(post.body)
+	        </div>
+	      </div>
       </div>
-      @Html(post.body)
-      <div class="permalink">
+      <!-- div class="permalink">
         <a href="@post.permaLink">Link</a>
-      </div>
+      </div-->
     </div>
   }
 }

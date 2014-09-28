@@ -15,8 +15,10 @@ import models.FefeBlogPost
 import java.sql.Timestamp
 import java.time.ZoneOffset
 import java.time.Instant
+import javax.inject.Inject
+import service.GoogleImageSearchService
 
-class FefeBlogPostServiceImpl extends FefeBlogPostService {
+class FefeBlogPostServiceImpl @Inject() (googleImageSearchService: GoogleImageSearchService) extends FefeBlogPostService {
   
   val baseUrl = "http://blog.fefe.de/"
   val yearMonthFormat = DateTimeFormatter.ofPattern("yyyyMM")
@@ -37,7 +39,7 @@ class FefeBlogPostServiceImpl extends FefeBlogPostService {
             val timestamp = makeTimeStamp(permaLink.drop(4))
             singlePost.select("> a:first-child").remove()
             val postBody = singlePost.html()
-            FefeBlogPost(permaLink, postBody, timestamp)
+            FefeBlogPost(permaLink, postBody, timestamp, googleImageSearchService.firstImageSource(postBody))
           }
         }
       }.toList.get(0)
@@ -64,13 +66,23 @@ class FefeBlogPostServiceImpl extends FefeBlogPostService {
             val timestamp = makeTimeStamp(permaLink.drop(4))
             singlePost.select("> a:first-child").remove()
             val postBody = singlePost.html()
-            FefeBlogPost(permaLink, postBody, timestamp)
+            val bodyText = singlePost.text()
+            FefeBlogPost(permaLink, postBody, timestamp, longestWord(bodyText.replace(".", " ").split(" ")))
           }
         }
       }.toList
     }
   }
-    
+  
+  def longestWord(words: Array[String]): String = {
+    var word = words(0)
+    for (i <- 1 until words.length)
+      if (words(i).length > word.length) {
+        word = words(i)
+      }
+    word
+  }
+  
   def makeTimeStamp(encoded: String) = {
     val encodedTimestamp = java.lang.Long.parseLong(encoded, 16)
     val z = (encodedTimestamp ^ fefec0de) * 1000
