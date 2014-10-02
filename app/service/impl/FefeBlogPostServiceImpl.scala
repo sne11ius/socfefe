@@ -16,9 +16,8 @@ import java.sql.Timestamp
 import java.time.ZoneOffset
 import java.time.Instant
 import javax.inject.Inject
-import service.GoogleImageSearchService
 
-class FefeBlogPostServiceImpl @Inject() (googleImageSearchService: GoogleImageSearchService) extends FefeBlogPostService {
+class FefeBlogPostServiceImpl @Inject() () extends FefeBlogPostService {
   
   val baseUrl = "http://blog.fefe.de/"
   val yearMonthFormat = DateTimeFormatter.ofPattern("yyyyMM")
@@ -39,7 +38,8 @@ class FefeBlogPostServiceImpl @Inject() (googleImageSearchService: GoogleImageSe
             val timestamp = makeTimeStamp(permaLink.drop(4))
             singlePost.select("> a:first-child").remove()
             val postBody = singlePost.html()
-            FefeBlogPost(permaLink, postBody, timestamp, googleImageSearchService.firstImageSource(postBody))
+            val bodyText = singlePost.text()
+            FefeBlogPost(permaLink, postBody, timestamp, longestWord(bodyText.replace(".", " ").split(" ")))
           }
         }
       }.toList.get(0)

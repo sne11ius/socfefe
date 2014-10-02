@@ -3,12 +3,12 @@ package controllers
 import play.api._
 import play.api.mvc._
 import javax.inject.Inject
-import service.GoogleImageSearchService
+import service.ImageSearchService
 
-class ImageSearchController @Inject() (val googleImageSearchService: GoogleImageSearchService) extends Controller {
+class ImageSearchController @Inject() (val imageSearchService: ImageSearchService) extends Controller {
 
   def findImage(keyword: String) = Action {
-    Redirect(googleImageSearchService.firstImageSource(keyword))
+    Redirect(imageSearchService.firstImageSource(keyword))
   }
   
 }

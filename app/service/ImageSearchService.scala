@@ -1,5 +1,5 @@
 package service
 
-trait GoogleImageSearchService {
+trait ImageSearchService {
   def firstImageSource(searchText: String): String
 }

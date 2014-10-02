@@ -1,12 +1,12 @@
 package service.impl
 
-import service.GoogleImageSearchService
+import service.ImageSearchService
 import org.jsoup.Jsoup
 import play.Logger
 import java.net.URLEncoder
 import play.api.libs.json.Json
 
-class GoogleImageSearchServiceImpl extends GoogleImageSearchService {
+class BingImageSearchServiceImpl extends ImageSearchService {
   
   def firstImageSource(searchText: String): String = {
     // yep, we use bing :D
